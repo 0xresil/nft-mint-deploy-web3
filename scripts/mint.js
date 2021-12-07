@@ -2,6 +2,10 @@ require('dotenv').config();
 
 const Web3 = require('web3');
 const web3 = new Web3("https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161");
+const axios = require('axios');
+
+const pinata_api_key = "e5e08d64baeead28a9c7";
+const secret = "d1e7ecbfdcdd39ea8488408af67a973abcfda67ba72efe438cc0c0ef03a71a7f";
 const myWallet = process.env.WALLET_PUBLIC_KEY;
 const privKey = process.env.WALLET_PRIVATE_KEY;
 
@@ -24,20 +28,19 @@ const mintNFT = async (count) => {
     console.log("receipt = ", receipt);
 }
 
-const key = process.env.REACT_APP_PINATA_KEY;
-const secret = process.env.REACT_APP_PINATA_SECRET;
-const axios = require('axios');
 
 const pinJSONToIPFS = async (JSONBody) => {
+    console.log("pinata_api_key = ", pinata_api_key);
     const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
     return axios
         .post(url, JSONBody, {
             headers: {
-                pinata_api_key: key,
+                pinata_api_key: pinata_api_key,
                 pinata_secret_api_key: secret
             }
         })
         .then((response) => {
+            console.log("hash = " + response.data.IpfsHash);
             return {
                 success: true,
                 pinataUrl: "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash
@@ -51,9 +54,22 @@ const pinJSONToIPFS = async (JSONBody) => {
             }
         })
 }
+
+/*
 (async () => {
     for (let i = 1; i <= 10; i ++) {
         await mintNFT(i);
     }
 })();
+*/
 
+(async () => {
+    console.log("pinning");
+    for (let i = 0; i <= 0; i ++) {
+        let metadata = require(`../metadata/${i}.json`);
+        let tokenURI = await pinJSONToIPFS(metadata);
+        
+        console.log("pinning");
+        console.log("tokenURI = ", tokenURI);
+    }
+})();

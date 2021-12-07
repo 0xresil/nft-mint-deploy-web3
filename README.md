@@ -5,5 +5,3 @@
 ## OpenSea
 https://testnets.opensea.io/collection/wolfnft
 ### Contract address is 0x882031b258829FC6ff0c950eD2F6e69B5d5066EF, verified.
-
-
